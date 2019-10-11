@@ -12,6 +12,7 @@ import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import pl.adamsiedlecki.spring.tool.ResourceGetter;
 
 @Route("")
 @PWA(name = "Project for secure communication", shortName = "ComCrypt")
@@ -22,8 +23,7 @@ public class MainView extends VerticalLayout {
     @Autowired
     public MainView(Environment env) {
         Notification.show("Welcome to the S. Technologies Communication System").setPosition(Notification.Position.BOTTOM_CENTER);
-        Image img2 = new Image("images/comcryptLogo.png","Vaadin Logo");
-        add(img2);
+        add(ResourceGetter.getComCryptLogo());
         setAlignItems(Alignment.CENTER);
     }
 
