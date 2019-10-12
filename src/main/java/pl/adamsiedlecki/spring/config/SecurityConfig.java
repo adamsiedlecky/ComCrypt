@@ -23,6 +23,10 @@ import pl.adamsiedlecki.spring.config.securityStuff.SecurityUtils;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private CommCryptUserDetailsService userDetailsService;
+    private static final String LOGIN_PROCESSING_URL = "/login";
+    private static final String LOGIN_FAILURE_URL = "/login?error"; //
+    private static final String LOGIN_URL = "/login";
+    private static final String LOGOUT_SUCCESS_URL = "/login";
 
     @Autowired
     public void WebSecurityConfig(CommCryptUserDetailsService userDetailsService) {
