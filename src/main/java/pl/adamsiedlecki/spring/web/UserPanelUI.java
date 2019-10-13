@@ -79,7 +79,7 @@ public class UserPanelUI extends VerticalLayout {
         //HorizontalLayout horizontalLayout = new HorizontalLayout(messageArea, messageIdField, keyField);
         Button sendMessageButton = new Button(env.getProperty("send.message.button"));
         VerticalLayout formLayout = new VerticalLayout(messageArea, messageIdField, keyField, sendMessageButton );
-        formLayout.setWidth("20%");
+        formLayout.setWidth(messageArea.getWidth());
         formLayout.setAlignItems(Alignment.CENTER);
         formLayout.addClassName("form-background");
         this.add(formLayout);
