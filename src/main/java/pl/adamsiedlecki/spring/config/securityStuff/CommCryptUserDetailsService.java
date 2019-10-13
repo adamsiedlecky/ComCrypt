@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +17,14 @@ public class CommCryptUserDetailsService implements UserDetailsService {
 
     private UserDAO userDAO;
     private static final Logger log = LoggerFactory.getLogger(CommCryptUser.class);
+
+    public void changePassword(String username, String newPassword){
+        Optional<CommCryptUser> user = userDAO.getByUsername(username);
+        if(user.isPresent()){
+            user.get().setPassword(new BCryptPasswordEncoder().encode(newPassword));
+            userDAO.saveAndFlush(user.get());
+        }
+    }
 
     @Autowired
     public CommCryptUserDetailsService(UserDAO userDAO){
