@@ -2,6 +2,7 @@ package pl.adamsiedlecki.spring.web;
 
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.Theme;
@@ -13,7 +14,7 @@ import org.springframework.core.env.Environment;
 @Theme(value = Lumo.class, variant = Lumo.DARK)
 @CssImport("./styles/style.css")
 @PageTitle("ComCrypt control panel")
-public class ControlPanelUI {
+public class ControlPanelUI extends VerticalLayout {
 
     @Autowired
     public ControlPanelUI(Environment env){

@@ -1,9 +1,14 @@
 package pl.adamsiedlecki.spring.web;
 
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextArea;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.PWA;
@@ -14,14 +19,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import pl.adamsiedlecki.spring.config.securityStuff.CommCryptUser;
-import pl.adamsiedlecki.spring.config.securityStuff.CommCryptUserDetailsService;
-import pl.adamsiedlecki.spring.config.securityStuff.UserRole;
 import pl.adamsiedlecki.spring.tool.ResourceGetter;
-
-import javax.annotation.Resource;
 import java.util.Collection;
-import java.util.List;
 
 @Route("user-panel")
 @Theme(value = Lumo.class, variant = Lumo.DARK)
@@ -54,10 +53,37 @@ public class UserPanelUI extends VerticalLayout {
             Image img = ResourceGetter.getUserPanelImage(isOwner);
             img.setClassName("user-panel-image");
             add(img);
+            Button controlPanelButton = new Button(env.getProperty("control.panel.button"));
+            controlPanelButton.addClickListener(e->this.getUI().ifPresent(u->u.navigate("control-panel")));
+            add(controlPanelButton);
+            addMessagePanel();
+            addLogoutButton();
         }else{
             Notification.show(env.getProperty("welcome.notification")+username,2000, Notification.Position.MIDDLE);
             add(ResourceGetter.getUserPanelImage(isOwner));
+            addMessagePanel();
+            addLogoutButton();
         }
+    }
+
+    private void addLogoutButton(){
+        Button logoutButton = new Button(env.getProperty("logout.button"));
+        logoutButton.addClickListener(e-> this.getUI().ifPresent(u->u.getPage().setLocation("/user-panel")));
+        this.add(logoutButton);
+    }
+
+    private void addMessagePanel(){
+        TextArea messageArea = new TextArea(env.getProperty("message.area"));
+        TextField messageIdField = new TextField(env.getProperty("message.id"));
+        TextField keyField = new TextField(env.getProperty("key.field"));
+        //HorizontalLayout horizontalLayout = new HorizontalLayout(messageArea, messageIdField, keyField);
+        Button sendMessageButton = new Button(env.getProperty("send.message.button"));
+        VerticalLayout formLayout = new VerticalLayout(messageArea, messageIdField, keyField, sendMessageButton );
+        formLayout.setWidth("20%");
+        formLayout.setAlignItems(Alignment.CENTER);
+        formLayout.addClassName("form-background");
+        this.add(formLayout);
+        this.setAlignItems(Alignment.CENTER);
     }
 
 }

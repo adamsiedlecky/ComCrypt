@@ -12,3 +12,8 @@
 .user-panel-image{
     margin-top: 45px;
 }
+.form-background{
+    background-color: black;
+    border-style: solid;
+    border-color: white;
+}
