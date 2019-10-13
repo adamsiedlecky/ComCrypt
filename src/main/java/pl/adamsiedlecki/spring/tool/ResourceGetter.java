@@ -11,4 +11,18 @@ public class ResourceGetter {
         return img;
     }
 
+    public static Image getUserPanelImage(boolean isOwner){
+        if(isOwner){
+            Image img = new Image("images/userPanelOwner.png","user panel image - owner");
+            img.setWidth("300px");
+            img.setHeight("150px");
+            return img;
+        }else{
+            Image img = new Image("images/userPanel.png","user panel image");
+            img.setWidth("300px");
+            img.setHeight("150px");
+            return img;
+        }
+    }
+
 }

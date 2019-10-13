@@ -1,4 +1,4 @@
-package pl.adamsiedlecki.spring;
+package pl.adamsiedlecki.spring.web;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -31,7 +31,7 @@ public class MainView extends VerticalLayout {
 
     @Autowired
     public MainView(Environment env) {
-        Notification.show("Welcome to the S. Technologies Communication System").setPosition(Notification.Position.BOTTOM_CENTER);
+        Notification.show(env.getProperty("main.welcome")).setPosition(Notification.Position.BOTTOM_CENTER);
         add(ResourceGetter.getComCryptLogo());
 
         TextField messageIdField = new TextField();
