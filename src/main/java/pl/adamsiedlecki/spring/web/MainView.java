@@ -34,12 +34,13 @@ public class MainView extends VerticalLayout {
         Notification.show(env.getProperty("main.welcome")).setPosition(Notification.Position.BOTTOM_CENTER);
         add(ResourceGetter.getComCryptLogo());
 
-        TextField messageIdField = new TextField();
-        messageIdField.setLabel(env.getProperty("id.message.field"));
+
         Button checkMessageButton = new Button(env.getProperty("check.message.button"));
+        checkMessageButton.addClickListener(e->{
+            this.getUI().ifPresent(u->u.navigate("show-message"));
+        });
         checkMessageButton.setIcon(new Icon(VaadinIcon.ROCKET));
-        checkMessageButton.setId("horizontalButton");
-        add(new HorizontalLayout(messageIdField, checkMessageButton));
+        add(checkMessageButton);
 
         Button loginButton = new Button(env.getProperty("login.button"));
         add(loginButton);

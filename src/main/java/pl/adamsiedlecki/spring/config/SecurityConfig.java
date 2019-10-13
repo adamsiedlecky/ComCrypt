@@ -47,7 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/VAADIN/**", "/PUSH/**", "/UIDL/**", "/login", "/login/**", "/error/**", "/accessDenied/**", "/vaadinServlet/**").permitAll()
                 .requestMatchers(SecurityUtils::isFrameworkInternalRequest).permitAll()
                 .antMatchers("/").permitAll()
-                .antMatchers("/message/**").permitAll()
+                .antMatchers("/show-message/**").permitAll()
                 .antMatchers("/user-panel/**").hasAuthority("USER")
                 .antMatchers("/control-panel").hasAuthority("OWNER")
 
