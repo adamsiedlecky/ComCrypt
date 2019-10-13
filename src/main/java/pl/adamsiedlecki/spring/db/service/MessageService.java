@@ -25,6 +25,10 @@ public class MessageService {
         return messageDAO.getOne(id);
     }
 
+    public Message getByUserProvidedId(String id){
+        return messageDAO.findByUserProvidedId(id);
+    }
+
     public List<Message> getByAuthor(String author){
         return messageDAO.findAllByAuthor(author);
     }

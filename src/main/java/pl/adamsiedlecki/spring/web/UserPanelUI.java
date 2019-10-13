@@ -27,6 +27,7 @@ import pl.adamsiedlecki.spring.db.service.MessageService;
 import pl.adamsiedlecki.spring.tool.ResourceGetter;
 import pl.adamsiedlecki.spring.tool.cryptography.SymmetricCryptography;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.Collection;
 
@@ -93,11 +94,35 @@ public class UserPanelUI extends VerticalLayout {
     private void addMessagePanel(boolean isAdmin, boolean isOwner, String username){
         HorizontalLayout rootHorizontal = new HorizontalLayout();
 
+        VerticalLayout formAddMessageLayout = new VerticalLayout();
+        prepareAddMessageLayout(formAddMessageLayout,isAdmin,username);
+
+        VerticalLayout showMessageLayout = new VerticalLayout();
+        prepareShowMessageLayout(showMessageLayout);
+
+        rootHorizontal.add(formAddMessageLayout,showMessageLayout);
+        if(isOwner){
+            Button controlPanelButton = new Button(env.getProperty("control.panel.button"));
+            controlPanelButton.addClickListener(e->this.getUI().ifPresent(u->u.navigate("control-panel")));
+            VerticalLayout controlPanelLayout = new VerticalLayout(controlPanelButton);
+            controlPanelLayout.setHeightFull();
+            controlPanelLayout.addClassName("form-background");
+            controlPanelLayout.setAlignItems(Alignment.CENTER);
+            rootHorizontal.add(controlPanelLayout);
+        }
+        rootHorizontal.setAlignItems(Alignment.CENTER);
+        this.add(rootHorizontal);
+
+    }
+
+    private void prepareAddMessageLayout(VerticalLayout formAddMessageLayout, boolean isAdmin, String username){
         TextArea messageArea = new TextArea(env.getProperty("message.area"));
+        messageArea.setHeight("80px");
         TextField messageIdField = new TextField(env.getProperty("message.id"));
         TextField keyField = new TextField(env.getProperty("key.field"));
         Button sendMessageButton = new Button(env.getProperty("send.message.button"));
         Checkbox includeAuthorCheckbox = new Checkbox(env.getProperty("include.author.checkbox"));
+        includeAuthorCheckbox.setValue(true);
         sendMessageButton.addClickListener(e->{
             if(!messageArea.isEmpty()&&!messageIdField.isEmpty()){
                 if(keyField.isEmpty()){
@@ -111,37 +136,39 @@ public class UserPanelUI extends VerticalLayout {
                     m = new Message(encrypted, env.getProperty("anonymous.user"), messageIdField.getValue());
                 }
                 messageService.save(m);
-
+                messageArea.clear();
+                messageIdField.clear();
+                keyField.clear();
             }
         });
-        VerticalLayout formAddMessageLayout = new VerticalLayout(messageArea, messageIdField, keyField, sendMessageButton );
+        formAddMessageLayout.add(messageArea, messageIdField, keyField, sendMessageButton );
         if(isAdmin){
             formAddMessageLayout.add(includeAuthorCheckbox);
         }
         formAddMessageLayout.setWidth(messageArea.getWidth());
+        formAddMessageLayout.setHeightFull();
         formAddMessageLayout.setAlignItems(Alignment.CENTER);
         formAddMessageLayout.addClassName("form-background");
+    }
 
-        VerticalLayout showMessageLayout = new VerticalLayout();
+    private void prepareShowMessageLayout(VerticalLayout showMessageLayout){
         TextField messageIdFieldShow = new TextField(env.getProperty("message.id"));
         PasswordField messageKeyField = new PasswordField(env.getProperty("key.field"));
         Button decryptButton = new Button(env.getProperty("decrypt.button"));
         TextArea decryptedMessageArea = new TextArea(env.getProperty("message.area"));
-        showMessageLayout.add(messageIdFieldShow, messageKeyField, decryptedMessageArea);
+        decryptedMessageArea.setHeight("120px");
+        showMessageLayout.add(messageIdFieldShow, messageKeyField, decryptedMessageArea, decryptButton);
         showMessageLayout.addClassName("form-background");
-        showMessageLayout.setHeight(formAddMessageLayout.getMaxHeight());
-
-        rootHorizontal.add(formAddMessageLayout,showMessageLayout);
-        if(isOwner){
-            Button controlPanelButton = new Button(env.getProperty("control.panel.button"));
-            controlPanelButton.addClickListener(e->this.getUI().ifPresent(u->u.navigate("control-panel")));
-            VerticalLayout controlPanelLayout = new VerticalLayout(controlPanelButton);
-            controlPanelLayout.addClassName("form-background");
-            rootHorizontal.add(controlPanelLayout);
-        }
-        rootHorizontal.setAlignItems(Alignment.CENTER);
-        this.add(rootHorizontal);
-
+        showMessageLayout.setHeightFull();
+        decryptButton.addClickListener(e->{
+            Message m = messageService.getByUserProvidedId(messageIdFieldShow.getValue());
+            if(m!=null){
+                String decrypted = SymmetricCryptography.decrypt(Base64.getDecoder().decode(m.getContent()),messageKeyField.getValue());
+                decryptedMessageArea.setValue(decrypted+" | "+m.getAuthor()+" | "+m.getCreationTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+            }else{
+                decryptedMessageArea.setValue(env.getProperty("message.not.found"));
+            }
+        });
     }
 
 }

@@ -14,7 +14,7 @@ public class Message {
     private Long id;
 
     @Column(unique=true)
-    private String idProvidedByUser;
+    private String userProvidedId;
 
     private String content;
 
@@ -22,10 +22,10 @@ public class Message {
 
     private LocalDateTime creationTime;
 
-    public Message(String content, String author, String idProvidedByUser) {
+    public Message(String content, String author, String userProvidedId) {
         this.content = content;
         this.author = author;
-        this.idProvidedByUser = idProvidedByUser;
+        this.userProvidedId = userProvidedId;
         this.creationTime = LocalDateTime.now();
     }
 
