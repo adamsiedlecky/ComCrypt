@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 public class Message {
@@ -58,6 +59,12 @@ public class Message {
 
     public LocalDateTime getCreationTime() {
         return creationTime;
+    }
+
+    public String getCreationTimePlainString() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        String formatDateTime = creationTime.format(formatter);
+        return formatDateTime;
     }
 
     public void setCreationTime(LocalDateTime creationTime) {

@@ -164,7 +164,7 @@ public class UserPanelUI extends VerticalLayout {
             Message m = messageService.getByUserProvidedId(messageIdFieldShow.getValue());
             if(m!=null){
                 String decrypted = SymmetricCryptography.decrypt(Base64.getDecoder().decode(m.getContent()),messageKeyField.getValue());
-                decryptedMessageArea.setValue(decrypted+" | "+m.getAuthor()+" | "+m.getCreationTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                decryptedMessageArea.setValue(decrypted+" | "+m.getAuthor()+" | "+m.getCreationTimePlainString());
             }else{
                 decryptedMessageArea.setValue(env.getProperty("message.not.found"));
             }

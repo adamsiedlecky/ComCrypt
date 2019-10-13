@@ -38,7 +38,7 @@ public class PublicShowMessageUI extends VerticalLayout {
             Message m = messageService.getByUserProvidedId(messageIdField.getValue());
             if(m!=null){
                 String decrypted = SymmetricCryptography.decrypt(Base64.getDecoder().decode(m.getContent()),keyField.getValue());
-                messageLabel.setText(decrypted+" | "+m.getAuthor()+" | "+m.getCreationTime().format(DateTimeFormatter.ISO_DATE_TIME));
+                messageLabel.setText(decrypted+" | "+m.getAuthor()+" | "+m.getCreationTimePlainString());
             }else{
                 messageLabel.setText(Objects.requireNonNull(env.getProperty("message.not.found")));
             }
