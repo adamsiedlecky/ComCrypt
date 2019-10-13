@@ -1,6 +1,7 @@
 package pl.adamsiedlecki.spring.web;
 
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Image;
@@ -38,49 +39,60 @@ public class UserPanelUI extends VerticalLayout {
         UserDetails principal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Collection<? extends  GrantedAuthority> authorities = principal.getAuthorities();
         boolean isOwner = false;
+        boolean isAdmin = false;
         for(GrantedAuthority a : authorities){
             if(a.getAuthority().contains("OWNER")){
                 isOwner = true;
             }
+            if(a.getAuthority().contains("ADMIN")){
+                isAdmin = true;
+            }
         }
-        loadPage(isOwner, principal.getUsername());
+        loadPage(isOwner, isAdmin, principal.getUsername());
         this.setAlignItems(Alignment.CENTER);
     }
 
-    private void loadPage(boolean isOwner, String username){
+    private void loadPage(boolean isOwner, boolean isAdmin, String username){
         if(isOwner){
             Notification.show(env.getProperty("welcome.owner.notification"),5000, Notification.Position.TOP_CENTER);
-            Notification.show(env.getProperty("welcome.notification")+username,1500, Notification.Position.MIDDLE);
+            Notification.show(env.getProperty("welcome.notification")+username,1500, Notification.Position.BOTTOM_START);
+            addLogoutButton();
             Image img = ResourceGetter.getUserPanelImage(isOwner);
             img.setClassName("user-panel-image");
             add(img);
-            Button controlPanelButton = new Button(env.getProperty("control.panel.button"));
-            controlPanelButton.addClickListener(e->this.getUI().ifPresent(u->u.navigate("control-panel")));
-            add(controlPanelButton);
-            addMessagePanel();
-            addLogoutButton();
+            addMessagePanel(isAdmin, isOwner);
+
         }else{
             Notification.show(env.getProperty("welcome.notification")+username,2000, Notification.Position.MIDDLE);
-            add(ResourceGetter.getUserPanelImage(isOwner));
-            addMessagePanel();
             addLogoutButton();
+            add(ResourceGetter.getUserPanelImage(isOwner));
+            addMessagePanel(isAdmin, isOwner);
+
         }
     }
 
     private void addLogoutButton(){
         Button logoutButton = new Button(env.getProperty("logout.button"));
-        logoutButton.addClickListener(e-> this.getUI().ifPresent(u->u.getPage().setLocation("/user-panel")));
-        this.add(logoutButton);
+        logoutButton.addClickListener(e-> this.getUI().ifPresent(u->u.getPage().setLocation("/logout")));
+        HorizontalLayout horizontalLayout = new HorizontalLayout(logoutButton);
+        horizontalLayout.setWidthFull();
+        horizontalLayout.setAlignItems(Alignment.END);
+        this.add(horizontalLayout);
+
     }
 
-    private void addMessagePanel(){
+    private void addMessagePanel(boolean isAdmin, boolean isOwner){
         HorizontalLayout rootHorizontal = new HorizontalLayout();
 
         TextArea messageArea = new TextArea(env.getProperty("message.area"));
         TextField messageIdField = new TextField(env.getProperty("message.id"));
         TextField keyField = new TextField(env.getProperty("key.field"));
         Button sendMessageButton = new Button(env.getProperty("send.message.button"));
+        Checkbox includeAuthorCheckbox = new Checkbox(env.getProperty("include.author.checkbox"));
         VerticalLayout formAddMessageLayout = new VerticalLayout(messageArea, messageIdField, keyField, sendMessageButton );
+        if(isAdmin){
+            formAddMessageLayout.add(includeAuthorCheckbox);
+        }
         formAddMessageLayout.setWidth(messageArea.getWidth());
         formAddMessageLayout.setAlignItems(Alignment.CENTER);
         formAddMessageLayout.addClassName("form-background");
@@ -95,6 +107,13 @@ public class UserPanelUI extends VerticalLayout {
         showMessageLayout.setHeight(formAddMessageLayout.getMaxHeight());
 
         rootHorizontal.add(formAddMessageLayout,showMessageLayout);
+        if(isOwner){
+            Button controlPanelButton = new Button(env.getProperty("control.panel.button"));
+            controlPanelButton.addClickListener(e->this.getUI().ifPresent(u->u.navigate("control-panel")));
+            VerticalLayout controlPanelLayout = new VerticalLayout(controlPanelButton);
+            controlPanelLayout.addClassName("form-background");
+            rootHorizontal.add(controlPanelLayout);
+        }
         rootHorizontal.setAlignItems(Alignment.CENTER);
         this.add(rootHorizontal);
 
