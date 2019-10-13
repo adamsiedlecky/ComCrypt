@@ -4,6 +4,8 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
@@ -33,6 +35,7 @@ public class PublicShowMessageUI extends VerticalLayout {
         messageIdField.setLabel(env.getProperty("id.message.field"));
         PasswordField keyField = new PasswordField(env.getProperty("key.field"));
         Button showMessageButton = new Button(env.getProperty("decrypt.button"));
+        showMessageButton.setIcon(new Icon(VaadinIcon.SAFE_LOCK));
         Label messageLabel = new Label();
         showMessageButton.addClickListener(e->{
             Message m = messageService.getByUserProvidedId(messageIdField.getValue());
