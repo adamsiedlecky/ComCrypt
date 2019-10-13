@@ -18,28 +18,29 @@ import pl.adamsiedlecki.spring.config.securityStuff.CommCryptUserDetailsService;
 
 @Component
 @Scope("prototype")
-public class AllUsersTab extends Tab {
+public class AllUsersTab extends VerticalLayout {
 
     private CommCryptUserDetailsService userDetailsService;
     private Grid<CommCryptUser> usersGrid;
 
     public AllUsersTab(CommCryptUserDetailsService userDetailsService, Environment env){
         VerticalLayout verticalLayout = new VerticalLayout();
-        this.setLabel(env.getProperty("all.users.tab"));
         this.userDetailsService = userDetailsService;
         Button refreshButton = new Button(env.getProperty("refresh.button"));
         refreshButton.addClickListener(e->refresh());
         usersGrid = new Grid<>();
         usersGrid.setWidthFull();
         usersGrid.addColumn(CommCryptUser::getId).setHeader(env.getProperty("id.column"));
-        usersGrid.addColumn(CommCryptUser::getUsername).setHeader(env.getProperty("username"));
+        usersGrid.addColumn(CommCryptUser::getUsername).setHeader(env.getProperty("username.field"));
         usersGrid.addColumn(CommCryptUser::getRolesPlainString).setHeader(env.getProperty("roles"));
         verticalLayout.add(refreshButton, usersGrid);
         verticalLayout.setAlignItems(FlexComponent.Alignment.CENTER);
         verticalLayout.setWidthFull();
         this.add(verticalLayout);
-        this.setClassName("full-width");
+        //this.setClassName("full-width");
         refresh();
+        this.setHeight("300px");
+        usersGrid.setHeight("150px");
     }
 
     private void refresh(){

@@ -16,11 +16,11 @@ import pl.adamsiedlecki.spring.config.securityStuff.CommCryptUserDetailsService;
 
 @Component
 @Scope("prototype")
-public class ChangeMyPasswordTab extends Tab {
+public class ChangeMyPasswordTab extends VerticalLayout {
 
     @Autowired
     public ChangeMyPasswordTab(Environment env, CommCryptUserDetailsService userDetailsService){
-        this.setLabel(env.getProperty("password.change"));
+
         VerticalLayout verticalLayout = new VerticalLayout();
         String username;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -35,7 +35,7 @@ public class ChangeMyPasswordTab extends Tab {
         Button saveButton = new Button(env.getProperty("save.button"));
         verticalLayout.add(label, passwordField, saveButton);
         this.add(verticalLayout);
-        this.setClassName("full-width");
+        this.setClassName("form-background");
         saveButton.addClickListener(e->{
             userDetailsService.changePassword(username, passwordField.getValue());
             passwordField.clear();
