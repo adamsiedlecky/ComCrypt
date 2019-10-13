@@ -1,10 +1,13 @@
 package pl.adamsiedlecki.spring.web.tabs;
 
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
+import com.vaadin.flow.theme.Theme;
+import com.vaadin.flow.theme.lumo.Lumo;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,7 +31,7 @@ public class AllUsersTab extends Tab {
         refreshButton.addClickListener(e->refresh());
         usersGrid = new Grid<>();
         usersGrid.setWidthFull();
-        usersGrid.addColumn(CommCryptUser::getId).setHeader("id.column");
+        usersGrid.addColumn(CommCryptUser::getId).setHeader(env.getProperty("id.column"));
         usersGrid.addColumn(CommCryptUser::getUsername).setHeader(env.getProperty("username"));
         usersGrid.addColumn(CommCryptUser::getRolesPlainString).setHeader(env.getProperty("roles"));
         verticalLayout.add(refreshButton, usersGrid);
