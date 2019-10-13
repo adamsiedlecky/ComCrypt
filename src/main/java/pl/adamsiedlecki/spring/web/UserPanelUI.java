@@ -74,10 +74,10 @@ public class UserPanelUI extends VerticalLayout {
     private void addLogoutButton(){
         Button logoutButton = new Button(env.getProperty("logout.button"));
         logoutButton.addClickListener(e-> this.getUI().ifPresent(u->u.getPage().setLocation("/logout")));
-        HorizontalLayout horizontalLayout = new HorizontalLayout(logoutButton);
-        horizontalLayout.setWidthFull();
-        horizontalLayout.setAlignItems(Alignment.END);
-        this.add(horizontalLayout);
+        VerticalLayout layout = new VerticalLayout(logoutButton);
+        layout.setWidthFull();
+        layout.setAlignItems(Alignment.END);
+        this.add(layout);
 
     }
 
