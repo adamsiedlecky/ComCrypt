@@ -1,5 +1,7 @@
 package pl.adamsiedlecki.spring.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,8 +14,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import pl.adamsiedlecki.spring.config.securityStuff.CommCryptUserDetailsService;
 import pl.adamsiedlecki.spring.config.securityStuff.CustomRequestCache;
+import pl.adamsiedlecki.spring.config.securityStuff.MySimpleUrlAuthenticationSuccessHandler;
 import pl.adamsiedlecki.spring.config.securityStuff.SecurityUtils;
 
 
@@ -23,6 +27,7 @@ import pl.adamsiedlecki.spring.config.securityStuff.SecurityUtils;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private CommCryptUserDetailsService userDetailsService;
+    private Logger log = LoggerFactory.getLogger(SecurityConfig.class);
     private static final String LOGIN_PROCESSING_URL = "/login";
     private static final String LOGIN_FAILURE_URL = "/login?error"; //
     private static final String LOGIN_URL = "/login";
@@ -51,6 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().hasAuthority("OWNER")
                 .and()
                 .formLogin()
+                .successHandler(new MySimpleUrlAuthenticationSuccessHandler())
                 .permitAll();
 
     }
@@ -79,6 +85,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder() {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         return passwordEncoder;
+    }
+
+    @Bean
+    public AuthenticationSuccessHandler myAuthenticationSuccessHandler(){
+        log.info("Inside AuthenticationSuccessHandler bean method. It probably means that bean is created.");
+        return new MySimpleUrlAuthenticationSuccessHandler();
     }
 
 }

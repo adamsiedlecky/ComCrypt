@@ -20,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import pl.adamsiedlecki.spring.tool.ResourceGetter;
 
+import static java.lang.System.setProperty;
+
 @Route("")
 @PWA(name = "Project for secure communication", shortName = "ComCrypt")
 @Theme(value = Lumo.class, variant = Lumo.DARK)
