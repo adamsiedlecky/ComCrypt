@@ -7,6 +7,7 @@ import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
@@ -73,17 +74,30 @@ public class UserPanelUI extends VerticalLayout {
     }
 
     private void addMessagePanel(){
+        HorizontalLayout rootHorizontal = new HorizontalLayout();
+
         TextArea messageArea = new TextArea(env.getProperty("message.area"));
         TextField messageIdField = new TextField(env.getProperty("message.id"));
         TextField keyField = new TextField(env.getProperty("key.field"));
-        //HorizontalLayout horizontalLayout = new HorizontalLayout(messageArea, messageIdField, keyField);
         Button sendMessageButton = new Button(env.getProperty("send.message.button"));
-        VerticalLayout formLayout = new VerticalLayout(messageArea, messageIdField, keyField, sendMessageButton );
-        formLayout.setWidth(messageArea.getWidth());
-        formLayout.setAlignItems(Alignment.CENTER);
-        formLayout.addClassName("form-background");
-        this.add(formLayout);
-        this.setAlignItems(Alignment.CENTER);
+        VerticalLayout formAddMessageLayout = new VerticalLayout(messageArea, messageIdField, keyField, sendMessageButton );
+        formAddMessageLayout.setWidth(messageArea.getWidth());
+        formAddMessageLayout.setAlignItems(Alignment.CENTER);
+        formAddMessageLayout.addClassName("form-background");
+
+        VerticalLayout showMessageLayout = new VerticalLayout();
+        TextField messageIdFieldShow = new TextField(env.getProperty("message.id"));
+        PasswordField messageKeyField = new PasswordField(env.getProperty("key.field"));
+        Button decryptButton = new Button(env.getProperty("decrypt.button"));
+        TextArea decryptedMessageArea = new TextArea(env.getProperty("message.area"));
+        showMessageLayout.add(messageIdFieldShow, messageKeyField, decryptedMessageArea);
+        showMessageLayout.addClassName("form-background");
+        showMessageLayout.setHeight(formAddMessageLayout.getMaxHeight());
+
+        rootHorizontal.add(formAddMessageLayout,showMessageLayout);
+        rootHorizontal.setAlignItems(Alignment.CENTER);
+        this.add(rootHorizontal);
+
     }
 
 }
