@@ -4,6 +4,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -33,6 +34,10 @@ public class CommCryptUser{
     public CommCryptUser() {
     }
 
+    public Long getId(){
+        return id;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -55,5 +60,14 @@ public class CommCryptUser{
 
     public void setRoles(List<UserRole> roles) {
         this.roles = roles;
+    }
+
+    public List<String> getRolesPlainString(){
+        List<String> list = new ArrayList<>();
+        Collection<? extends GrantedAuthority> authorities = getRoles();
+        for (GrantedAuthority auth: authorities){
+            list.add(auth.getAuthority());
+        }
+        return list;
     }
 }

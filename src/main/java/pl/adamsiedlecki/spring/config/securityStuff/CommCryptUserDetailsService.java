@@ -40,6 +40,10 @@ public class CommCryptUserDetailsService implements UserDetailsService {
         userDAO.save(user);
     }
 
+    public List<CommCryptUser> findAll(){
+        return userDAO.findAll();
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<CommCryptUser> user = userDAO.getByUsername(username);
