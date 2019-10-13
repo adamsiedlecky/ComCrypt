@@ -24,10 +24,8 @@ import java.util.Objects;
 @Route("show-message")
 @Theme(value = Lumo.class, variant = Lumo.DARK)
 @CssImport("./styles/style.css")
-@PageTitle("ComCrypt user panel")
+@PageTitle("ComCrypt")
 public class PublicShowMessageUI extends VerticalLayout {
-
-
 
     @Autowired
     public PublicShowMessageUI(Environment env, MessageService messageService){
@@ -40,12 +38,13 @@ public class PublicShowMessageUI extends VerticalLayout {
             Message m = messageService.getByUserProvidedId(messageIdField.getValue());
             if(m!=null){
                 String decrypted = SymmetricCryptography.decrypt(Base64.getDecoder().decode(m.getContent()),keyField.getValue());
-                messageLabel.add(decrypted+" | "+m.getAuthor()+" | "+m.getCreationTime().format(DateTimeFormatter.ISO_DATE_TIME));
+                messageLabel.setText(decrypted+" | "+m.getAuthor()+" | "+m.getCreationTime().format(DateTimeFormatter.ISO_DATE_TIME));
             }else{
-                messageLabel.add(Objects.requireNonNull(env.getProperty("message.not.found")));
+                messageLabel.setText(Objects.requireNonNull(env.getProperty("message.not.found")));
             }
         });
         add(messageIdField, keyField, showMessageButton, messageLabel);
+        this.setAlignItems(Alignment.CENTER);
     }
 
 }
