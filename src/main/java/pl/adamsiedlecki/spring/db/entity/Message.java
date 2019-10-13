@@ -1,5 +1,6 @@
 package pl.adamsiedlecki.spring.db.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -12,15 +13,19 @@ public class Message {
     @GeneratedValue
     private Long id;
 
+    @Column(unique=true)
+    private String idProvidedByUser;
+
     private String content;
 
     private String author;
 
     private LocalDateTime creationTime;
 
-    public Message(String content, String author) {
+    public Message(String content, String author, String idProvidedByUser) {
         this.content = content;
         this.author = author;
+        this.idProvidedByUser = idProvidedByUser;
         this.creationTime = LocalDateTime.now();
     }
 

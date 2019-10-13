@@ -16,12 +16,18 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import pl.adamsiedlecki.spring.db.entity.Message;
+import pl.adamsiedlecki.spring.db.service.MessageService;
 import pl.adamsiedlecki.spring.tool.ResourceGetter;
+import pl.adamsiedlecki.spring.tool.cryptography.SymmetricCryptography;
+
+import java.util.Base64;
 import java.util.Collection;
 
 @Route("user-panel")
@@ -32,10 +38,13 @@ public class UserPanelUI extends VerticalLayout {
 
     private UserDetailsService userDetailsService;
     private Environment env;
+    private MessageService messageService;
 
-    public UserPanelUI(UserDetailsService userDetailsService, Environment env){
+    @Autowired
+    public UserPanelUI(UserDetailsService userDetailsService, Environment env, MessageService messageService){
         userDetailsService = userDetailsService;
         this.env = env;
+        this.messageService = messageService;
         UserDetails principal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Collection<? extends  GrantedAuthority> authorities = principal.getAuthorities();
         boolean isOwner = false;
@@ -60,13 +69,13 @@ public class UserPanelUI extends VerticalLayout {
             Image img = ResourceGetter.getUserPanelImage(isOwner);
             img.setClassName("user-panel-image");
             add(img);
-            addMessagePanel(isAdmin, isOwner);
+            addMessagePanel(isAdmin, isOwner, username);
 
         }else{
             Notification.show(env.getProperty("welcome.notification")+username,2000, Notification.Position.MIDDLE);
             addLogoutButton();
             add(ResourceGetter.getUserPanelImage(isOwner));
-            addMessagePanel(isAdmin, isOwner);
+            addMessagePanel(isAdmin, isOwner, username);
 
         }
     }
@@ -81,7 +90,7 @@ public class UserPanelUI extends VerticalLayout {
 
     }
 
-    private void addMessagePanel(boolean isAdmin, boolean isOwner){
+    private void addMessagePanel(boolean isAdmin, boolean isOwner, String username){
         HorizontalLayout rootHorizontal = new HorizontalLayout();
 
         TextArea messageArea = new TextArea(env.getProperty("message.area"));
@@ -89,6 +98,22 @@ public class UserPanelUI extends VerticalLayout {
         TextField keyField = new TextField(env.getProperty("key.field"));
         Button sendMessageButton = new Button(env.getProperty("send.message.button"));
         Checkbox includeAuthorCheckbox = new Checkbox(env.getProperty("include.author.checkbox"));
+        sendMessageButton.addClickListener(e->{
+            if(!messageArea.isEmpty()&&!messageIdField.isEmpty()){
+                if(keyField.isEmpty()){
+                    Notification.show(env.getProperty("key.not.provided"),3000, Notification.Position.TOP_CENTER);
+                }
+                String encrypted = Base64.getEncoder().encodeToString(SymmetricCryptography.encrypt(messageArea.getValue(),keyField.getValue()));
+                Message m;
+                if(includeAuthorCheckbox.getValue()){
+                    m = new Message(encrypted,username, messageIdField.getValue());
+                }else{
+                    m = new Message(encrypted, env.getProperty("anonymous.user"), messageIdField.getValue());
+                }
+                messageService.save(m);
+
+            }
+        });
         VerticalLayout formAddMessageLayout = new VerticalLayout(messageArea, messageIdField, keyField, sendMessageButton );
         if(isAdmin){
             formAddMessageLayout.add(includeAuthorCheckbox);
