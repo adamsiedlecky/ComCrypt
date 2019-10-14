@@ -1,19 +1,3 @@
-# Project Base for Vaadin Flow and Spring Boot
+# ComCrypt - Spring Security & AES & Vaadin14
 
-This project can be used as a starting point to create your own Vaadin Flow application with Spring Boot.
-It contains all the necessary configuration and some placeholder files to get you started.
-
-The best way to use it by via [vaadin.com/start](https://vaadin.com/start) - you can get only the necessary parts and choose the package naming you want to use.
-
-Import the project to the IDE of your choosing as a Maven project. 
-
-Run application using `mvn spring-boot:run` or directly running Application class from your IDE. 
-
-Open http://localhost:8080/ in browser
-
-If you want to run your app locally in the production mode, run `mvn spring-boot:run -Pproduction`.
-
-For documentation on using Vaadin Flow and Spring, visit [vaadin.com/docs](https://vaadin.com/docs/flow/spring/tutorial-spring-basic.html)
-
-For more information on Vaadin Flow, visit https://vaadin.com/flow.
-
+This project is a simple communicator which uses AES encryption. Whole application is centralised around account/s with OWNER role, which means that only them can create new accounts. Only users with ADMIN role can send anonymous messages (others send them with author's username). Only logged users (role USER) can write messages. Non-logged users can only display message by id and decrypt it with a key.
