@@ -36,10 +36,11 @@ public class AllUsersTab extends VerticalLayout {
         verticalLayout.add(refreshButton, usersGrid);
         verticalLayout.setAlignItems(FlexComponent.Alignment.CENTER);
         verticalLayout.setWidthFull();
+        verticalLayout.setClassName("little-top-margin");
         this.add(verticalLayout);
-        //this.setClassName("full-width");
+        this.setClassName("little-top-margin");
         refresh();
-        this.setHeight("300px");
+        this.setHeight("270px");
         usersGrid.setHeight("150px");
     }
 
