@@ -32,6 +32,7 @@ public class DeleteUserTab extends VerticalLayout {
         deleteButton.addClickListener(e->{
             if(NumberUtils.isDigits(userIdField.getValue())){
                 userDetailsService.deleteUser(Long.parseLong(userIdField.getValue()));
+                userIdField.clear();
             }else{
                 Notification.show(env.getProperty("value.is.not.numeric"));
             }
