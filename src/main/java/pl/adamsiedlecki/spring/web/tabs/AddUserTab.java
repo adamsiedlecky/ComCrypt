@@ -2,6 +2,7 @@ package pl.adamsiedlecki.spring.web.tabs;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -34,7 +35,7 @@ public class AddUserTab extends VerticalLayout {
         Checkbox isAdmin = new Checkbox("ADMIN");
         Checkbox isOwner = new Checkbox("OWNER");
         Button saveButton = new Button(env.getProperty("save.button"));
-        root.add(usernameTextField, passwordField, isAdmin, isOwner, saveButton);
+        root.add(new Label(env.getProperty("add.user.tab")),usernameTextField, passwordField, isAdmin, isOwner, saveButton);
 
         saveButton.addClickListener(e->{
             if(!usernameTextField.isEmpty()&&!passwordField.isEmpty()){

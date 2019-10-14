@@ -14,6 +14,7 @@ import org.springframework.core.env.Environment;
 import pl.adamsiedlecki.spring.web.tabs.AddUserTab;
 import pl.adamsiedlecki.spring.web.tabs.AllUsersTab;
 import pl.adamsiedlecki.spring.web.tabs.ChangeMyPasswordTab;
+import pl.adamsiedlecki.spring.web.tabs.DeleteUserTab;
 
 @Route("control-panel")
 @Theme(value = Lumo.class, variant = Lumo.DARK)
@@ -23,10 +24,10 @@ public class ControlPanelUI extends VerticalLayout {
 
     @Autowired
     public ControlPanelUI(Environment env, AllUsersTab allUsersTab, ChangeMyPasswordTab changeMyPassword,
-                          AddUserTab addUserTab){
+                          AddUserTab addUserTab, DeleteUserTab deleteUserTab){
         Notification.show(env.getProperty("welcome.control.panel"),2000, Notification.Position.BOTTOM_CENTER );
         add(allUsersTab);
-        add(new HorizontalLayout(changeMyPassword, addUserTab));
+        add(new HorizontalLayout(changeMyPassword, addUserTab, deleteUserTab));
 
 
     }

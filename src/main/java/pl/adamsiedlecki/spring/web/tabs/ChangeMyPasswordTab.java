@@ -33,7 +33,7 @@ public class ChangeMyPasswordTab extends VerticalLayout {
         Label label = new Label(env.getProperty("actual.logged.username") + username);
         PasswordField passwordField = new PasswordField(env.getProperty("password.field"));
         Button saveButton = new Button(env.getProperty("save.button"));
-        verticalLayout.add(label, passwordField, saveButton);
+        verticalLayout.add(new Label(env.getProperty("password.change")), label, passwordField, saveButton);
         this.add(verticalLayout);
         this.setClassName("form-background");
         saveButton.addClickListener(e->{

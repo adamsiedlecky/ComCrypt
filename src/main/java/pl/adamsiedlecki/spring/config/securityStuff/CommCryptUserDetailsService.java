@@ -64,4 +64,8 @@ public class CommCryptUserDetailsService implements UserDetailsService {
 
 
     }
+
+    public void deleteUser(Long id){
+        userDAO.deleteById(id);
+    }
 }
